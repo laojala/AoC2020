@@ -7,32 +7,46 @@ class ValidatePassword:
         self.position2 = position2
         self.character = character
 
-    def validate(self, password):
+    def validate_policy1(self, password):
         count = password.count(self.character)
         if count >= self.position1 and count <= self.position2:
             return True
         else:
             return False
+    
+    def validate_policy2(self, password):
+        pos1 = password[self.position1 - 1]
+        pos2 = password[self.position2 - 1]
+
+        if (pos1 != self.character) and (pos2 != self.character):
+            return False
+
+        if (pos1 == self.character) and (pos2 == self.character):
+            return False
+        
+        return True
 
     @staticmethod
-    def process_rule_part1(path="file.dat"):
+    def process_file(path="file.dat"):
 
-        counter = 0
+        counter = {
+            "policy1": 0,
+            "policy2": 0
+        }
 
         file_path=(os.path.dirname(__file__)) + "/" + path
 
         with open(file_path,"r") as f:
             for row in f.readlines():
-                isValid = ValidatePassword._validate_pw(row)
-                if isValid:
-                    counter += 1
+                number1, number2, char, password=ValidatePassword._parse_line(row)
+                policy1Valid = ValidatePassword(number1, number2, char).validate_policy1(password)
+                policy2Valid = ValidatePassword(number1, number2, char).validate_policy2(password)
+                if policy1Valid:
+                    counter["policy1"] += 1
+                if policy2Valid:
+                    counter["policy2"] += 1
         
         return counter
-
-    @staticmethod
-    def _validate_pw(row):
-        number1, number2, char, password=ValidatePassword._parse_line(row)
-        return ValidatePassword(number1, number2, char).validate(password)
 
     @staticmethod
     def _parse_line(line):
