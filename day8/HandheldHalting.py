@@ -33,7 +33,7 @@ while True:
         index += boot_part1[index][2]
 
 print('part1 accumulator:', accumulator)
-#assert(accumulator == 2014)
+assert(accumulator == 2014)
 
 #part2
 
@@ -76,7 +76,6 @@ while not solved:
         argument = boot_code[index][2]
 
         if(visited == 1 or visited == 100):
-            operation_changed = False
             break
 
         if operation == 'acc':
